@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lifx-controller
+spec:
+  selector:
+    matchLabels:
+      app: lifx-controller
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: lifx-controller
+    spec:
+      containers:
+      - name: lifx-controller
+        image: bgalhardo/lifx-rest-controller:latest
+        env:
+        - name: UPDATE_PERIOD
+          value: "5"
+        - name: DISCOVERY_PERIOD
+          value: "30"
+        - name: PORT
+          value: "8002"
+        imagePullPolicy: Always
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lifx-controller
+spec:
+  selector:
+    app: lifx-controller
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8002
+  type: ClusterIP

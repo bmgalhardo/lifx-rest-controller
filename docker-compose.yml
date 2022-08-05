@@ -1,0 +1,10 @@
+version: "3.5"
+
+services:
+  lifx:
+    build: ./src
+    environment:
+      - UPDATE_PERIOD
+      - DISCOVERY_PERIOD
+      - PORT
+    network_mode: host
